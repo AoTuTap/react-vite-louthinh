@@ -3,12 +3,13 @@ import axios from "axios";
 import { useState } from "react"
 import { createUerApi } from "../../services/api.service";
 
-const UserForm = () => {
+const UserForm = (props) => {
     const [fullName, setFullName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [phone, setPhone] = useState("");
     const [isModalOpen, setIsModalOpen] = useState(false)
+    const { loadUser } = props
 
     const handleSubmit = async () => {
         const res = await createUerApi(fullName, email, password, phone);
@@ -17,17 +18,24 @@ const UserForm = () => {
                 message: "Create User",
                 description: "Tao user thanh cong"
             })
-            setIsModalOpen(false)
+            resetAndCloseModal()
+            await loadUser()
         } else {
             notification.error({
                 message: "Error create user",
                 description: JSON.stringify(res.message)
             })
-
         }
-
         console.log(">>> Check Res", res);
     };
+
+    const resetAndCloseModal = () => {
+        setIsModalOpen(false);
+        setEmail("");
+        setFullName("");
+        setPhone("");
+        setPassword("");
+    }
 
 
     return (
@@ -43,7 +51,7 @@ const UserForm = () => {
                 <Modal title="Create Users"
                     open={isModalOpen}
                     onOk={() => handleSubmit()}
-                    onCancel={() => setIsModalOpen(false)}
+                    onCancel={() => resetAndCloseModal()}
                     maskClosable={false}
                     okText="Create"
                 >
