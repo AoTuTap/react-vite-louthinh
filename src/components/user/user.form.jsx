@@ -1,6 +1,7 @@
-import { Button, Input } from "antd"
+import { Button, Input, notification } from "antd"
 import axios from "axios";
 import { useState } from "react"
+import { createUerApi } from "../../services/api.service";
 
 const UserForm = () => {
     const [fullName, setFullName] = useState("");
@@ -8,15 +9,14 @@ const UserForm = () => {
     const [password, setPassword] = useState("");
     const [phone, setPhone] = useState("");
 
-    const handleClickButton = () => {
-        const URL_BACKEND = "http://localhost:8080/api/v1/user";
-        const data = {
-            fullName: fullName,
-            email: email,
-            password: password,
-            phone: phone
-        }
-        axios.post(URL_BACKEND, data)
+    const handleClickButton = async () => {
+        const res = await createUerApi(fullName, email, password, phone);
+        if (res.data)
+            notification.success({
+                message: "Create User",
+                description: "Tao user thanh cong"
+            })
+        console.log(">>> Check Res", res);
     };
 
     return (
@@ -50,7 +50,8 @@ const UserForm = () => {
                         onChange={(event) => { setPhone(event.target.value) }}
                     />
                 </div>
-                <div>
+                <div style={{ display: "flex", justifyContent: "space-between" }}>
+                    <h3>Table Users</h3>
                     <Button
                         onClick={handleClickButton}
                         type="primary">Create User</Button>
