@@ -10,6 +10,7 @@ const UserPage = () => {
     const loadUser = async () => {
         const res = await fetchAllUserApi()
         setDataUsers(res.data)
+        console.log(">> Reload user")
     }
 
     useEffect(() => {
@@ -20,6 +21,7 @@ const UserPage = () => {
             <UserForm loadUser={loadUser} />
             <UserTable
                 dataUsers={dataUsers}
+                loadUser={loadUser}
             />
         </div>
     )
