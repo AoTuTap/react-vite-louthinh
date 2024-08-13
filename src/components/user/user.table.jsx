@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Space, Table, Tag } from 'antd';
+import { Space, Table, Tag, Popconfirm, Button, notification } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import UpdateUserModal from './update.user.modal';
 import ViewUserDetail from './view.user.details';
+import { deleteUerApi } from '../../services/api.service';
 
 
 const UserTable = (props) => {
@@ -49,12 +50,46 @@ const UserTable = (props) => {
             }
             }
             style={{ cursor: "pointer", color: "orange" }} />
-          <DeleteOutlined style={{ cursor: "pointer", color: "red" }} />
+          <Popconfirm
+            title="Delete user"
+            description={`Are you sure to delete ${record.fullName} ?`}
+            onConfirm={() => { handleDelete(record._id) }}
+            onCancel={cancel}
+            okText="Yes"
+            cancelText="No"
+          >
+            <DeleteOutlined style={{ cursor: "pointer", color: "red" }} />
+          </Popconfirm>
+
         </div>
 
       ),
     },
   ];
+
+
+  const handleDelete = async (id) => {
+    const res = await deleteUerApi(id);
+    if (res.data) {
+      notification.success({
+        message: "Delete User",
+        description: "Xóa user thành công"
+      })
+      await loadUser();
+    } else {
+      notification.error({
+        message: "Error delete user",
+        description: JSON.stringify(res.message)
+      })
+    }
+    console.log(">>> Check Res", res);
+  };
+
+
+  const cancel = (e) => {
+    console.log(e);
+    message.error('Click on No');
+  };
 
   return (
     <>

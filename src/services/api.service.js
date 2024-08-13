@@ -21,8 +21,13 @@ const updateUerApi = (_id, fullName, phone) => {
     return axios.put(URL_BACKEND,data);
 }
 
+const deleteUerApi = (_id) => {
+    const URL_BACKEND = `/api/v1/user/${_id}`;
+    return axios.delete(URL_BACKEND);
+}
+
 const fetchAllUserApi = () => {
     const URL_BACKEND = "/api/v1/user";
     return axios.get(URL_BACKEND);
 }
-export {createUerApi, updateUerApi, fetchAllUserApi}
+export {createUerApi, updateUerApi, fetchAllUserApi,deleteUerApi}
